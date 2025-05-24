@@ -35,19 +35,6 @@ export function Header() {
           <div className="flex items-center gap-6">
             <Logo />
 
-            <div className="hidden md:flex relative">
-              <Input
-                className="pr-10 w-[300px]"
-                placeholder="Search a website..."
-              />
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute right-0 top-0"
-              >
-                <Search className="h-4 w-4" />
-              </Button>
-            </div>
           </div>
 
           <nav className="hidden md:flex items-center gap-4">
@@ -86,9 +73,7 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-2 md:hidden">
-            <Button variant="ghost" size="icon">
-              <Search className="h-5 w-5" />
-            </Button>
+          
             <MobileMenu />
           </div>
         </div>
