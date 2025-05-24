@@ -1,2 +1,1 @@
-# ScamAway-web
-
+# Basic project starter
