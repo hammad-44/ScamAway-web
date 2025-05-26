@@ -1,14 +1,14 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Search, Globe, Phone, Coins, CreditCard } from "lucide-react";
+import { Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type CheckType = "website" | "phone" | "crypto" | "iban";
+type CheckType = "website";
 
 interface ScamCheckerInputProps {
-  onCheck?: (value: string, type: CheckType) => void;
+  onCheck?: (value: string, type: CheckType, result?: any) => void;
   className?: string;
 }
 
@@ -18,10 +18,37 @@ export function ScamCheckerInput({
 }: ScamCheckerInputProps) {
   const [inputValue, setInputValue] = useState("");
   const [activeType, setActiveType] = useState<CheckType>("website");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate(); // ⬅️ for navigation
 
-  const handleCheck = () => {
-    if (inputValue.trim() && onCheck) {
-      onCheck(inputValue, activeType);
+  const handleCheck = async () => {
+    if (!inputValue.trim()) return;
+
+    setLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:8000/predict", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ url: inputValue }),
+      });
+
+      const result = await response.json();
+      console.log("🔍 Scam Check Result:", result);
+
+      if (onCheck) {
+        onCheck(inputValue, activeType, result);
+      }
+
+      // Redirect to /results?url=inputValue
+      navigate(`/results?url=${encodeURIComponent(inputValue)}`);
+    } catch (error) {
+      console.error("❌ Error checking scam:", error);
+      alert("Failed to check scam status. Try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -30,16 +57,6 @@ export function ScamCheckerInput({
       handleCheck();
     }
   };
-
-  const checkTypes = [
-    {
-      id: "website" as CheckType,
-      label: "Website",
-      icon: <Globe className="h-4 w-4" />,
-    },
-   
-  ];
-
 
   return (
     <div className={cn("w-full", className)}>
@@ -51,20 +68,19 @@ export function ScamCheckerInput({
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder={"Enter Website URL"}
+          placeholder="Enter Website URL"
           className="pl-10 py-6 text-lg"
         />
       </div>
-
-     
 
       <div className="mt-6 mx-auto">
         <Button
           onClick={handleCheck}
           className="w-full md:w-auto bg-red-600 hover:bg-red-700 text-white py-6"
           size="lg"
+          disabled={loading}
         >
-          Check scam
+          {loading ? "Checking..." : "Check scam"}
         </Button>
       </div>
     </div>

@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import {
+  Shield,
   ShieldCheck,
   ShieldAlert,
   ShieldQuestion,
@@ -24,157 +25,27 @@ import {
   Search,
   Flag,
   ArrowRight,
+  Star
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-// Mock API call - In a real implementation, this would be an actual API call
-const fetchWebsiteAnalysis = (url: string) => {
-  // Simulate network request
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      // Randomize the risk score based on the URL to create different examples
-      let riskScore = 0;
-
-      if (url.includes("scam") || url.includes("phish")) {
-        riskScore = Math.floor(Math.random() * 30) + 70; // 70-100 (high risk)
-      } else if (
-        url.includes("new") ||
-        url.includes("shop") ||
-        url.includes("crypto")
-      ) {
-        riskScore = Math.floor(Math.random() * 30) + 35; // 35-65 (medium risk)
-      } else {
-        riskScore = Math.floor(Math.random() * 25) + 5; // 5-30 (low risk)
-      }
-
-      // Current date for reference
-      const currentDate = new Date();
-
-      // Domain age (newer domains for high risk, older for low risk)
-      const domainAgeYears = riskScore > 65 ? 0 : riskScore > 30 ? 1 : 5;
-      const registrationDate = new Date();
-      registrationDate.setFullYear(currentDate.getFullYear() - domainAgeYears);
-
-      // Expiry date
-      const expiryDate = new Date(registrationDate);
-      expiryDate.setFullYear(
-        expiryDate.getFullYear() + (riskScore > 65 ? 1 : 3),
-      );
-
-      // Generate analysis data
-      resolve({
-        url: url,
-        riskScore: riskScore,
-        summary:
-          riskScore > 65
-            ? "High risk detected! This website shows multiple warning signs of a potential scam."
-            : riskScore > 30
-              ? "Medium risk detected. Exercise caution when interacting with this website."
-              : "Low risk detected. This website appears to be legitimate based on our analysis.",
-        domainInfo: {
-          domainAge: `${domainAgeYears} year${domainAgeYears !== 1 ? "s" : ""}`,
-          domainRegistrationDate: registrationDate.toLocaleDateString(),
-          domainExpiryDate: expiryDate.toLocaleDateString(),
-          registrar:
-            riskScore > 65 ? "PrivateRegister LLC" : "GoDaddy.com, LLC",
-          registrantName:
-            riskScore > 65 ? "WhoisGuard Protected" : "Domain Admin",
-          registrantOrganization:
-            riskScore > 65
-              ? "Privacy Protection Service"
-              : "Example Corporation",
-          registrantCountry: riskScore > 65 ? "Panama" : "United States",
-          hasWhoisPrivacy: riskScore > 65,
-          whoisHistoryChanges: riskScore > 65 ? 4 : 1,
-        },
-        serverInfo: {
-          hostingProvider:
-            riskScore > 65 ? "CloudHost Services" : "Amazon Web Services",
-          serverIP:
-            riskScore > 65
-              ? "192.168.0." + Math.floor(Math.random() * 255)
-              : "13.32.98." + Math.floor(Math.random() * 255),
-          serverLocation:
-            riskScore > 65 ? "Russian Federation" : "United States",
-          useHttps: riskScore <= 65,
-          validSSLCertificate: riskScore <= 30,
-          sslIssuer:
-            riskScore <= 30
-              ? "Let's Encrypt Authority X3"
-              : riskScore <= 65
-                ? "Self-signed"
-                : "None",
-          suspiciousURLCharacters: riskScore > 65,
-          usesSubdomain: riskScore > 30,
-        },
-        contentAnalysis: {
-          designQuality:
-            riskScore > 65
-              ? "Poor"
-              : riskScore > 30
-                ? "Average"
-                : "Professional",
-          grammarQuality:
-            riskScore > 65 ? "Poor" : riskScore > 30 ? "Average" : "Good",
-          hasContactInfo: riskScore <= 30,
-          hasPrivacyPolicy: riskScore <= 30,
-          hasTermsOfService: riskScore <= 30,
-          hasReturnPolicy: riskScore <= 65,
-          contentPlagiarism: riskScore > 30 ? "Detected" : "Not detected",
-          suspiciousOutboundLinks: riskScore > 65 ? 5 : 0,
-        },
-        trafficAnalysis: {
-          alexaRank:
-            riskScore > 65
-              ? "Not ranked"
-              : riskScore > 30
-                ? "3,245,678"
-                : "125,432",
-          estimatedMonthlyVisits:
-            riskScore > 65 ? "< 1,000" : riskScore > 30 ? "15,000" : "250,000",
-          trafficSources: {
-            direct: riskScore > 65 ? "95%" : riskScore > 30 ? "70%" : "40%",
-            search: riskScore > 65 ? "2%" : riskScore > 30 ? "15%" : "35%",
-            referrals: riskScore > 65 ? "1%" : riskScore > 30 ? "10%" : "15%",
-            social: riskScore > 65 ? "2%" : riskScore > 30 ? "5%" : "10%",
-          },
-          bounceRate: riskScore > 65 ? "92%" : riskScore > 30 ? "75%" : "45%",
-          avgSessionDuration:
-            riskScore > 65 ? "00:18" : riskScore > 30 ? "01:45" : "03:50",
-        },
-        securityChecks: {
-          malwareDetected: riskScore > 65,
-          phishingDetected: riskScore > 65,
-          suspiciousJavaScript: riskScore > 30,
-          excessiveTrackers: riskScore > 30 ? 15 : 4,
-          cookieAbuse: riskScore > 30,
-          blacklistStatus:
-            riskScore > 65 ? "Blacklisted on 3 services" : "Not blacklisted",
-        },
-        reputation: {
-          userReviews: {
-            positive: riskScore > 65 ? 5 : riskScore > 30 ? 35 : 82,
-            negative: riskScore > 65 ? 95 : riskScore > 30 ? 65 : 18,
-          },
-          socialMediaPresence: riskScore <= 30,
-          hasVerifiedBusiness: riskScore <= 30,
-          acceptedPaymentMethods:
-            riskScore > 65
-              ? ["Cryptocurrency", "Wire Transfer"]
-              : ["Credit Card", "PayPal", "Apple Pay", "Google Pay"],
-        },
-        seoAnalysis: {
-          indexedInGoogle: riskScore <= 65,
-          backlinksCount:
-            riskScore > 65 ? "< 10" : riskScore > 30 ? "240" : "2,500+",
-          organicKeywords:
-            riskScore > 65 ? "< 5" : riskScore > 30 ? "45" : "250+",
-        },
-      });
-    }, 1500);
+const fetchWebsiteAnalysis = async (url: string) => {
+  const response = await fetch("http://localhost:8000/predict", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ url }),
   });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch analysis");
+  }
+
+  return await response.json();
 };
+
 
 const Results = () => {
   const [searchParams] = useSearchParams();
