@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -17,6 +17,10 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { auth, provider } from "@/firebase";
+import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "@/firebase"; // import your Firestore db
 
 const formSchema = z
   .object({
@@ -28,11 +32,13 @@ const formSchema = z
       .min(8, "Password must be at least 8 characters")
       .regex(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-        "Password must contain at least one uppercase letter, one lowercase letter, and one number",
+        "Password must contain at least one uppercase letter, one lowercase letter, and one number"
       ),
     confirmPassword: z.string(),
     termsAccepted: z.literal(true, {
-      errorMap: () => ({ message: "You must accept the terms and conditions" }),
+      errorMap: () => ({
+        message: "You must accept the terms and conditions",
+      }),
     }),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -47,6 +53,7 @@ export function RegisterForm() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(formSchema),
@@ -56,27 +63,51 @@ export function RegisterForm() {
       email: "",
       password: "",
       confirmPassword: "",
-      termsAccepted: false,
+      termsAccepted: false as true,
     },
   });
 
-  const onSubmit = async (data: RegisterFormValues) => {
+ const onSubmit = async (data: RegisterFormValues) => {
+  setSubmitting(true);
+  setError(null);
+
+  try {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      data.email,
+      data.password
+    );
+    const user = userCredential.user;
+
+    // Save additional user data to Firestore
+    await setDoc(doc(db, "users", user.uid), {
+      uid: user.uid,
+      email: user.email,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      createdAt: new Date(),
+    });
+
+    navigate("/account");
+  } catch (err: any) {
+    console.error(err);
+    setError(err.message || "Failed to create account");
+  } finally {
+    setSubmitting(false);
+  }
+};
+
+
+  const handleGoogleSignUp = async () => {
     setSubmitting(true);
     setError(null);
 
-    // In a real app, this would be an API call
     try {
-      console.log("Register form submitted:", data);
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // For demo purposes, we'll show an error
-      // In a real app, you would redirect to a success page
-      setError(
-        "This is a demo registration. In a real app, your account would be created.",
-      );
-    } catch (err) {
-      setError("Failed to create account. Please try again later.");
+      await signInWithPopup(auth, provider);
+      navigate("/account");
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || "Google Sign-In failed");
     } finally {
       setSubmitting(false);
     }
@@ -101,7 +132,7 @@ export function RegisterForm() {
                   <FormItem>
                     <FormLabel>First Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="John" {...field} />
+                      <Input placeholder="Name" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -115,7 +146,7 @@ export function RegisterForm() {
                   <FormItem>
                     <FormLabel>Last Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Doe" {...field} />
+                      <Input placeholder="Father Name" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -169,7 +200,7 @@ export function RegisterForm() {
                           <EyeIcon className="h-4 w-4" />
                         )}
                         <span className="sr-only">
-                          {showPassword ? "Hide password" : "Show password"}
+                          {showPassword ? "Hide" : "Show"} password
                         </span>
                       </Button>
                     </div>
@@ -208,9 +239,7 @@ export function RegisterForm() {
                           <EyeIcon className="h-4 w-4" />
                         )}
                         <span className="sr-only">
-                          {showConfirmPassword
-                            ? "Hide password"
-                            : "Show password"}
+                          {showConfirmPassword ? "Hide" : "Show"} password
                         </span>
                       </Button>
                     </div>
@@ -261,9 +290,20 @@ export function RegisterForm() {
             >
               {submitting ? "Creating account..." : "Create account"}
             </Button>
+
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full"
+              onClick={handleGoogleSignUp}
+              disabled={submitting}
+            >
+              Continue with Google
+            </Button>
           </form>
         </Form>
       </CardContent>
+
       <CardFooter className="flex justify-center border-t p-6">
         <p className="text-sm text-gray-600">
           Already have an account?{" "}

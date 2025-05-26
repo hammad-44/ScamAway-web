@@ -11,7 +11,7 @@ const Register = () => {
       <main className="flex-grow">
         <PageHeader
           title="Create Your Account"
-          description="Join ScamAdviser to help make the internet safer for everyone"
+          description="Join ScamAway to help make the internet safer for everyone"
         />
 
         <div className="container mx-auto px-4 py-8">

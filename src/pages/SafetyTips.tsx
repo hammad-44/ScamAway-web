@@ -75,7 +75,7 @@ const SafetyTips = () => {
                               Research the website before buying
                             </p>
                             <p className="text-gray-600">
-                              Check the website with ScamAdviser, look for
+                              Check the website with ScamAway, look for
                               reviews, and verify the company's existence.
                             </p>
                           </div>
@@ -460,69 +460,6 @@ const SafetyTips = () => {
             </TabsContent>
           </Tabs>
 
-          {/* Additional Resources */}
-          <section>
-            <h2 className="text-2xl font-bold mb-6">Additional Resources</h2>
-
-            <div className="grid md:grid-cols-3 gap-6">
-              <Card>
-                <CardContent className="p-6">
-                  <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                    <Shield className="h-5 w-5 text-red-600" />
-                    Stay Protected Checklist
-                  </h3>
-                  <p className="text-gray-600 mb-4">
-                    Download our comprehensive checklist for staying safe online
-                    across all your devices and accounts.
-                  </p>
-                  <a
-                    href="#"
-                    className="text-red-600 hover:text-red-800 font-medium"
-                  >
-                    Download PDF →
-                  </a>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                    <Shield className="h-5 w-5 text-red-600" />
-                    Video Tutorials
-                  </h3>
-                  <p className="text-gray-600 mb-4">
-                    Watch our step-by-step video guides on recognizing and
-                    avoiding common online scams.
-                  </p>
-                  <a
-                    href="#"
-                    className="text-red-600 hover:text-red-800 font-medium"
-                  >
-                    View Videos →
-                  </a>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="p-6">
-                  <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                    <Shield className="h-5 w-5 text-red-600" />
-                    Scam Alert Newsletter
-                  </h3>
-                  <p className="text-gray-600 mb-4">
-                    Subscribe to our weekly newsletter to stay informed about
-                    the latest scams and how to protect yourself.
-                  </p>
-                  <a
-                    href="#"
-                    className="text-red-600 hover:text-red-800 font-medium"
-                  >
-                    Subscribe →
-                  </a>
-                </CardContent>
-              </Card>
-            </div>
-          </section>
         </div>
       </main>
 

@@ -1,29 +1,34 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { auth, db } from "@/firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
+import { signOut } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 export function AccountTabs() {
+  const [user, setUser] = useState(null);
   const [personalInfo, setPersonalInfo] = useState({
-    firstName: "John",
-    lastName: "Doe",
-    email: "john.doe@example.com",
-    phone: "+1 (555) 123-4567",
+    firstName: "",
+    lastName: "",
+    email: "",
   });
 
-  const [notifications, setNotifications] = useState({
-    emailAlerts: true,
-    newScams: true,
-    tips: false,
-    marketing: false,
-  });
-
-  const [reportsCount, setReportsCount] = useState(3);
   const [savedWebsites, setSavedWebsites] = useState([
     { id: 1, url: "safeshop.com", status: "safe", date: "2023-10-15" },
     { id: 2, url: "scamwebsite.net", status: "scam", date: "2023-11-20" },
@@ -35,7 +40,9 @@ export function AccountTabs() {
     },
   ]);
 
-  const getStatusBadge = (status: string) => {
+  const [reportsCount] = useState(3);
+
+  const getStatusBadge = (status) => {
     switch (status) {
       case "safe":
         return <Badge className="bg-green-500">Safe</Badge>;
@@ -45,6 +52,57 @@ export function AccountTabs() {
         return <Badge className="bg-yellow-500">Questionable</Badge>;
       default:
         return <Badge className="bg-gray-500">Unknown</Badge>;
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+        const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+        if (userDoc.exists()) {
+          const data = userDoc.data();
+          setPersonalInfo({
+            firstName: data.firstName || "",
+            lastName: data.lastName || "",
+            email: currentUser.email,
+          });
+        } else {
+          // No profile in Firestore yet
+          setPersonalInfo({
+            firstName: "",
+            lastName: "",
+            email: currentUser.email,
+          });
+        }
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+ const navigate = useNavigate();
+
+const handleLogout = async () => {
+  try {
+    await signOut(auth);
+    navigate("/login"); 
+  } catch (error) {
+    console.error("Logout failed:", error);
+    alert("Failed to log out.");
+  }
+};
+
+  const handleUpdateProfile = async () => {
+    if (!user) return;
+    try {
+      await setDoc(doc(db, "users", user.uid), {
+        firstName: personalInfo.firstName,
+        lastName: personalInfo.lastName,
+      }, { merge: true });
+      alert("Profile updated successfully!");
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      alert("Failed to update profile.");
     }
   };
 
@@ -62,25 +120,10 @@ export function AccountTabs() {
             <CardTitle>Profile Information</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="flex flex-col md:flex-row gap-6 items-start md:items-center">
-              <Avatar className="w-24 h-24">
-                <AvatarImage src="" alt="Profile" />
-                <AvatarFallback className="text-2xl">
-                  {personalInfo.firstName.charAt(0)}
-                  {personalInfo.lastName.charAt(0)}
-                </AvatarFallback>
-              </Avatar>
-              <div>
-                <h3 className="text-xl font-semibold">
-                  {personalInfo.firstName} {personalInfo.lastName}
-                </h3>
-                <p className="text-gray-500">{personalInfo.email}</p>
-                <Button variant="outline" className="mt-2">
-                  Change Avatar
-                </Button>
-              </div>
+            <div className="space-y-2">
+              <Label>Email</Label>
+              <Input value={personalInfo.email} disabled />
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Label htmlFor="firstName">First Name</Label>
@@ -88,10 +131,7 @@ export function AccountTabs() {
                   id="firstName"
                   value={personalInfo.firstName}
                   onChange={(e) =>
-                    setPersonalInfo({
-                      ...personalInfo,
-                      firstName: e.target.value,
-                    })
+                    setPersonalInfo({ ...personalInfo, firstName: e.target.value })
                   }
                 />
               </div>
@@ -101,46 +141,23 @@ export function AccountTabs() {
                   id="lastName"
                   value={personalInfo.lastName}
                   onChange={(e) =>
-                    setPersonalInfo({
-                      ...personalInfo,
-                      lastName: e.target.value,
-                    })
-                  }
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={personalInfo.email}
-                  onChange={(e) =>
-                    setPersonalInfo({ ...personalInfo, email: e.target.value })
-                  }
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="phone">Phone Number</Label>
-                <Input
-                  id="phone"
-                  value={personalInfo.phone}
-                  onChange={(e) =>
-                    setPersonalInfo({ ...personalInfo, phone: e.target.value })
+                    setPersonalInfo({ ...personalInfo, lastName: e.target.value })
                   }
                 />
               </div>
             </div>
-
-            <div className="flex justify-end gap-2">
-              <Button variant="outline">Cancel</Button>
-              <Button className="bg-red-600 hover:bg-red-700">
-                Save Changes
+            <div className="flex justify-between items-center">
+              <Button onClick={handleUpdateProfile} className="bg-blue-600 hover:bg-blue-700">
+                Change Profile
+              </Button>
+              <Button onClick={handleLogout} variant="destructive">
+                Logout
               </Button>
             </div>
+
           </CardContent>
         </Card>
       </TabsContent>
-
 
       {/* Activity Tab */}
       <TabsContent value="activity">

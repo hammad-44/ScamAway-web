@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -17,6 +17,11 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { auth, provider } from "@/firebase";
+import {
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from "firebase/auth";
 
 const formSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -30,6 +35,7 @@ export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(formSchema),
@@ -44,19 +50,25 @@ export function LoginForm() {
     setSubmitting(true);
     setError(null);
 
-    // In a real app, this would be an API call
     try {
-      console.log("Login form submitted:", data);
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await signInWithEmailAndPassword(auth, data.email, data.password);
+      navigate("/account"); // Replace with your protected route
+    } catch (err: any) {
+      setError(err.message || "Login failed");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
-      // For demo purposes, we'll show an error
-      // In a real app, you would redirect to a dashboard on success
-      setError(
-        "This is a demo login. In a real app, you would be logged in now.",
-      );
-    } catch (err) {
-      setError("Failed to login. Please check your credentials and try again.");
+  const handleGoogleLogin = async () => {
+    setSubmitting(true);
+    setError(null);
+
+    try {
+      await signInWithPopup(auth, provider);
+      navigate("/account");
+    } catch (err: any) {
+      setError(err.message || "Google sign-in failed");
     } finally {
       setSubmitting(false);
     }
@@ -140,7 +152,7 @@ export function LoginForm() {
                 />
                 <label
                   htmlFor="remember-me"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  className="text-sm font-medium leading-none"
                 >
                   Remember me
                 </label>
@@ -160,6 +172,20 @@ export function LoginForm() {
               disabled={submitting}
             >
               {submitting ? "Signing in..." : "Sign in"}
+            </Button>
+
+            <div className="flex items-center justify-center">
+              <span className="text-sm text-gray-500">or</span>
+            </div>
+
+            <Button
+              type="button"
+              onClick={handleGoogleLogin}
+              variant="outline"
+              className="w-full"
+              disabled={submitting}
+            >
+              Sign in with Google
             </Button>
           </form>
         </Form>

@@ -6,17 +6,17 @@ import { Shield, Star, Users, Globe, Award } from "lucide-react";
 const About = () => {
   const stats = [
     {
-      value: "15M+",
+      value: "1M+",
       label: "Websites Analyzed",
       icon: <Globe className="h-8 w-8 text-blue-500" />,
     },
     {
-      value: "2M+",
+      value: "0.5M+",
       label: "Active Users",
       icon: <Users className="h-8 w-8 text-green-500" />,
     },
     {
-      value: "1.8M+",
+      value: "1M+",
       label: "Scams Reported",
       icon: <Shield className="h-8 w-8 text-red-500" />,
     },
@@ -28,10 +28,7 @@ const About = () => {
   ];
 
   const teamMembers = [
-    { name: "Emma Chen", role: "CEO & Founder", img: "" },
-    { name: "Michael Rodriguez", role: "Chief Technology Officer", img: "" },
-    { name: "Sarah Johnson", role: "Head of Security Research", img: "" },
-    { name: "David Kim", role: "Lead Developer", img: "" },
+    { name: "Omar", role: "CEO & Founder", img: "" }
   ];
 
   return (
@@ -40,44 +37,17 @@ const About = () => {
 
       <main className="flex-grow">
         <PageHeader
-          title="About ScamAdviser"
+          title="About ScamAway"
           description="Our mission is to create a safer internet by helping users avoid scams and fraudulent websites"
         />
 
         <div className="container mx-auto px-4 py-8">
-          {/* Our Story Section */}
-          <section className="mb-16">
-            <h2 className="text-3xl font-bold mb-6 text-center">Our Story</h2>
-            <div className="max-w-3xl mx-auto text-gray-700 space-y-4">
-              <p>
-                ScamAdviser was founded in 2012 after our founder, Emma Chen,
-                fell victim to an online scam that cost her thousands of
-                dollars. Frustrated by the lack of easily accessible tools to
-                verify website legitimacy, she set out to build a solution that
-                would help others avoid similar experiences.
-              </p>
-              <p>
-                What began as a simple website checker has evolved into a
-                comprehensive platform used by millions of people worldwide. Our
-                advanced algorithms and community reporting system work together
-                to identify potentially fraudulent websites, helping users make
-                informed decisions before they share personal information or
-                make purchases online.
-              </p>
-              <p>
-                Today, ScamAdviser is recognized as a leading authority in
-                online fraud detection and prevention. We partner with
-                cybersecurity organizations, consumer protection agencies, and
-                law enforcement to stay ahead of emerging scam trends and
-                contribute to a safer digital ecosystem.
-              </p>
-            </div>
-          </section>
+         
 
           {/* Stats Section */}
           <section className="bg-white rounded-lg shadow-sm p-8 mb-16">
             <h2 className="text-3xl font-bold mb-10 text-center">
-              ScamAdviser by the Numbers
+              ScamAway by the Numbers
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {stats.map((stat, index) => (
@@ -177,52 +147,6 @@ const About = () => {
             </div>
           </section>
 
-          {/* Awards & Recognition */}
-          <section className="bg-white rounded-lg shadow-sm p-8">
-            <h2 className="text-3xl font-bold mb-6 text-center">
-              Awards & Recognition
-            </h2>
-
-            <div className="max-w-2xl mx-auto space-y-6">
-              <div className="border-b pb-4">
-                <h3 className="text-xl font-semibold mb-2">
-                  Cybersecurity Excellence Award, 2023
-                </h3>
-                <p className="text-gray-600">
-                  Recognized for outstanding contribution to consumer protection
-                  in the digital space.
-                </p>
-              </div>
-
-              <div className="border-b pb-4">
-                <h3 className="text-xl font-semibold mb-2">
-                  Consumer Choice Award, 2022
-                </h3>
-                <p className="text-gray-600">
-                  Voted as the most trusted scam detection service by online
-                  shoppers.
-                </p>
-              </div>
-
-              <div className="border-b pb-4">
-                <h3 className="text-xl font-semibold mb-2">
-                  Tech Innovation Award, 2021
-                </h3>
-                <p className="text-gray-600">
-                  For our machine learning algorithm that improves scam
-                  detection accuracy.
-                </p>
-              </div>
-
-              <div>
-                <h3 className="text-xl font-semibold mb-2">Featured In</h3>
-                <p className="text-gray-600">
-                  Our work and research have been featured in major publications
-                  including The New York Times, WIRED, Forbes, and TechCrunch.
-                </p>
-              </div>
-            </div>
-          </section>
         </div>
       </main>
 

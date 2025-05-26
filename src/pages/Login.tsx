@@ -11,7 +11,7 @@ const Login = () => {
       <main className="flex-grow">
         <PageHeader
           title="Sign In to Your Account"
-          description="Access your ScamAdviser account to check and report scams"
+          description="Access your ScamAway account to check and report scams"
         />
 
         <div className="container mx-auto px-4 py-8">

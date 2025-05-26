@@ -2,9 +2,29 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { PageHeader } from "@/components/ui/PageHeader";
 
+import {
+  AlertTriangle,
+  ShieldX,
+  CheckCircle2,
+  ExternalLink,
+  BookOpen,
+  Users,
+  RefreshCcw,
+  Building2,
+  Scale,
+  Contact
+} from "lucide-react";
+
+const SectionHeader = ({ title, icon: Icon }) => (
+  <div className="flex items-center gap-2 mt-10 mb-4">
+    {Icon && <Icon className="w-6 h-6 text-blue-600" />}
+    <h2 className="text-2xl font-bold text-gray-800">{title}</h2>
+  </div>
+);
+
 const Disclaimer = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-gray-50 text-gray-800">
       <Header />
 
       <main className="flex-grow">
@@ -13,141 +33,78 @@ const Disclaimer = () => {
           description="Important information about the limitations of our service"
         />
 
-        <div className="container mx-auto px-4 py-8">
-          <div className="bg-white p-8 rounded-lg shadow-sm">
-            <div className="prose max-w-none">
-              <p>Last Updated: November 15, 2023</p>
+        <div className="container mx-auto px-4 py-10">
+          <div className="bg-white p-10 rounded-xl shadow-md">
+            <div className="max-w-4xl mx-auto space-y-8 text-base leading-relaxed">
 
-              <h2>Disclaimer</h2>
+              <p className="text-sm text-gray-500">Last Updated: November 15, 2023</p>
+
+              <SectionHeader title="1. Disclaimer" icon={AlertTriangle} />
               <p>
-                The information provided on ScamAdviser is for general
-                informational purposes only. All information on the site is
-                provided in good faith, however, we make no representation or
-                warranty of any kind, express or implied, regarding the
-                accuracy, adequacy, validity, reliability, availability, or
-                completeness of any information on the site.
+                The information provided on ScamAway is for general informational purposes only. All information on the site is provided in good faith. However, we make no representation or warranty of any kind, express or implied, regarding the accuracy, adequacy, reliability, or completeness of any information.
               </p>
 
-              <h2>No Liability</h2>
+              <SectionHeader title="2. No Liability" icon={ShieldX} />
               <p>
-                Under no circumstance shall we have any liability to you for any
-                loss or damage of any kind incurred as a result of the use of
-                the site or reliance on any information provided on the site.
-                Your use of the site and your reliance on any information on the
-                site is solely at your own risk.
+                Under no circumstance shall we be liable for any loss or damage incurred as a result of using or relying on the site. Your use of the site is solely at your own risk.
               </p>
 
-              <h2>Accuracy of Information</h2>
+              <SectionHeader title="3. Accuracy of Information" icon={CheckCircle2} />
               <p>
-                ScamAdviser uses various technologies, algorithms, and data
-                sources to assess the trustworthiness of websites, including
-                domain registration information, website content analysis, and
-                user reports. However, these assessments are probabilistic in
-                nature and may not always be accurate.
-              </p>
-              <p>
-                A website that receives a high trust score from our system may
-                still engage in fraudulent activities, and conversely, a
-                legitimate website may receive a low trust score due to various
-                factors. Our assessments should be considered as one of many
-                tools to help you make informed decisions, not as definitive
-                statements of a website's legitimacy.
+                ScamAway utilizes various technologies and user reports to assess trustworthiness. These are probabilistic and not always accurate. A high trust score does not guarantee legitimacy, and a low score does not imply fraud.
               </p>
 
-              <h2>External Links</h2>
+              <SectionHeader title="4. External Links" icon={ExternalLink} />
               <p>
-                The site may contain links to external websites that are not
-                provided or maintained by or in any way affiliated with us.
-                Please note that we do not guarantee the accuracy, relevance,
-                timeliness, or completeness of any information on these external
-                websites.
+                Our site may contain links to external websites. We do not guarantee the accuracy or reliability of any information on these third-party websites.
               </p>
 
-              <h2>Professional Advice</h2>
+              <SectionHeader title="5. Professional Advice" icon={BookOpen} />
               <p>
-                The information on ScamAdviser is not intended as and should not
-                be taken as professional advice. If you suspect you have been a
-                victim of a scam or fraud, we recommend contacting relevant
-                authorities, such as your local police, consumer protection
-                agencies, or legal professionals.
+                The information on ScamAway is not professional advice. For legal or scam-related issues, contact your local authorities or legal advisors.
               </p>
 
-              <h2>User-Generated Content</h2>
+              <SectionHeader title="6. User-Generated Content" icon={Users} />
               <p>
-                Our platform allows users to submit reports about websites and
-                other entities they believe to be fraudulent. These reports
-                represent the opinions of individual users and have not been
-                verified by ScamAdviser. We do not endorse or take
-                responsibility for the accuracy of user-generated content.
+                Reports submitted by users are opinions and have not been verified. We do not take responsibility for the accuracy of user-generated content.
               </p>
 
-              <h2>Changes and Errors</h2>
+              <SectionHeader title="7. Changes and Errors" icon={RefreshCcw} />
               <p>
-                We reserve the right to change the information on the site
-                without notice. We make reasonable efforts to provide accurate
-                information, but errors may exist. If you identify an error or
-                have concerns about our information, please contact us.
+                We may change the information on this site at any time. Despite efforts to provide accurate information, errors may occur. Contact us to report any inaccuracies.
               </p>
 
-              <h2>Business Listings</h2>
+              <SectionHeader title="8. Business Listings" icon={Building2} />
               <p>
-                Businesses can claim and manage their listings on ScamAdviser.
-                While we take steps to verify these claims, we cannot guarantee
-                that all business information is accurate or that all claimed
-                listings are managed by authorized representatives of those
-                businesses.
+                Businesses can claim listings, and while we attempt to verify claims, we cannot guarantee accuracy or legitimacy of all business data provided.
               </p>
 
-              <h2>Use of Our Trust Scores</h2>
+              <SectionHeader title="9. Use of Our Trust Scores" icon={Scale} />
               <p>
-                Trust scores and other assessments generated by ScamAdviser are
-                the property of ScamAdviser and may not be reproduced,
-                distributed, or used for commercial purposes without our express
-                written permission.
+                Trust scores are proprietary to ScamAway. Reproduction, distribution, or commercial use without permission is prohibited.
               </p>
 
-              <h2>Limitation on Liability</h2>
+              <SectionHeader title="10. Limitation on Liability" icon={ShieldX} />
               <p>
-                To the maximum extent permitted by applicable law, ScamAdviser
-                shall not be liable for any indirect, incidental, special,
-                consequential, or punitive damages, or any loss of profits or
-                revenues, whether incurred directly or indirectly, or any loss
-                of data, use, goodwill, or other intangible losses, resulting
-                from:
+                To the fullest extent permitted by law, ScamAway disclaims all liability for indirect, incidental, or consequential damages including:
               </p>
-              <ol>
-                <li>Your use of or inability to use the site;</li>
-                <li>
-                  Any unauthorized access to or use of our servers and/or any
-                  personal information stored therein;
-                </li>
-                <li>
-                  Any interruption or cessation of transmission to or from the
-                  site;
-                </li>
-                <li>
-                  Any bugs, viruses, trojan horses, or the like that may be
-                  transmitted to or through the site by any third party;
-                </li>
-                <li>
-                  Any errors or omissions in any content or for any loss or
-                  damage incurred as a result of the use of any content posted,
-                  emailed, transmitted, or otherwise made available through the
-                  site.
-                </li>
-              </ol>
+              <ul className="list-disc list-inside ml-4 space-y-2">
+                <li>Your use or inability to use the site.</li>
+                <li>Unauthorized access to data.</li>
+                <li>Service interruptions.</li>
+                <li>Malicious software transmitted by third parties.</li>
+                <li>Content errors and resulting damages.</li>
+              </ul>
 
-              <h2>Contact Us</h2>
+              <SectionHeader title="11. Contact Us" icon={Contact} />
               <p>
-                If you have any questions about this Disclaimer, please contact
-                us:
+                If you have any questions about this Disclaimer, contact us:
               </p>
-              <p>
-                Email: legal@scamadviser.com
-                <br />
-                Postal Address: 123 Anti-Scam Street, Amsterdam, 1000 AB,
-                Netherlands
+              <p className="font-medium">
+                Email: <a href="mailto:legal@scamaway.com" className="text-blue-600 underline">legal@scamaway.com</a><br />
+                Address: Lahore, Pakistan
               </p>
+
             </div>
           </div>
         </div>
