@@ -31,7 +31,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const fetchWebsiteAnalysis = async (url: string) => {
-  const response = await fetch("https://fbc4-103-115-198-250.ngrok-free.app/predict", {
+  const response = await fetch("http://localhost:8000/predict", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
