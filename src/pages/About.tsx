@@ -6,17 +6,17 @@ import { Shield, Star, Users, Globe, Award } from "lucide-react";
 const About = () => {
   const stats = [
     {
-      value: "1M+",
+      value: "10k+",
       label: "Websites Analyzed",
       icon: <Globe className="h-8 w-8 text-blue-500" />,
     },
     {
-      value: "0.5M+",
+      value: "5k+",
       label: "Active Users",
       icon: <Users className="h-8 w-8 text-green-500" />,
     },
     {
-      value: "1M+",
+      value: "1k+",
       label: "Scams Reported",
       icon: <Shield className="h-8 w-8 text-red-500" />,
     },
@@ -44,7 +44,6 @@ const About = () => {
         <div className="container mx-auto px-4 py-8">
          
 
-          {/* Stats Section */}
           <section className="bg-white rounded-lg shadow-sm p-8 mb-16">
             <h2 className="text-3xl font-bold mb-10 text-center">
               ScamAway by the Numbers
@@ -63,7 +62,6 @@ const About = () => {
             </div>
           </section>
 
-          {/* Mission & Values */}
           <section className="mb-16">
             <h2 className="text-3xl font-bold mb-6 text-center">
               Our Mission & Values
@@ -116,8 +114,6 @@ const About = () => {
               </div>
             </div>
           </section>
-
-          {/* Team Section */}
           <section className="mb-16">
             <h2 className="text-3xl font-bold mb-10 text-center">
               Meet Our Team

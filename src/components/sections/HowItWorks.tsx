@@ -63,11 +63,7 @@ export function HowItWorks() {
           </div>
         </div>
 
-        <div className="text-center mt-12">
-          <Button asChild className="bg-red-600 hover:bg-red-700">
-            <Link to="/how-it-works">Learn More About Our Technology</Link>
-          </Button>
-        </div>
+      
       </div>
     </section>
   );

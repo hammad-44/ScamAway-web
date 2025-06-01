@@ -17,12 +17,17 @@ import {
   MessageSquare,
   Share2,
   MapPin,
+  AlertCircle,
   Phone,
   Clock,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react"; // Import useEffect
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CheckCircle2 } from "lucide-react";
+
+// Import your existing Firebase db instance
+import { db } from "@/firebase"; // Assuming your firebase.ts is in src/firebase.ts
+import { collection, addDoc } from 'firebase/firestore';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -32,6 +37,18 @@ const Contact = () => {
     message: "",
   });
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+  const [isDbReady, setIsDbReady] = useState(false);
+
+  useEffect(() => {
+    if (db) {
+      setIsDbReady(true);
+    } else {
+      console.error("Firestore DB instance not available. Check firebase.ts import.");
+      setMessage({ type: 'error', text: "Application error: Database not connected." });
+    }
+  }, []); 
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -44,11 +61,47 @@ const Contact = () => {
     setFormData((prev) => ({ ...prev, subject: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    // In a real implementation, this would send the form data to a server
-    setFormSubmitted(true);
+    setLoading(true);
+    setMessage(null); 
+
+    if (!isDbReady) {
+      setMessage({ type: 'error', text: "Database is not ready. Please try again." });
+      setLoading(false);
+      return;
+    }
+
+    if (!formData.name || !formData.email || !formData.subject || !formData.message) {
+      setMessage({ type: 'error', text: "Please fill in all required fields." });
+      setLoading(false);
+      return;
+    }
+
+    try {
+  
+      const collectionPath = "contact_messages"; 
+      
+      await addDoc(collection(db, collectionPath), {
+        ...formData,
+        timestamp: new Date().toISOString(), 
+      });
+
+      setMessage({ type: 'success', text: "Message sent successfully! We'll get back to you soon." });
+      setFormSubmitted(true);
+      setFormData({
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
+      });
+
+    } catch (error: any) {
+      console.error("Error adding document: ", error);
+      setMessage({ type: 'error', text: `Failed to send message: ${error.message}` });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -65,7 +118,18 @@ const Contact = () => {
           <div className="grid md:grid-cols-3 gap-8">
             {/* Contact Form */}
             <div className="md:col-span-2">
-              {formSubmitted ? (
+              {message && (
+                <Alert className={`mb-6 ${message.type === 'success' ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
+                  {message.type === 'success' ? <CheckCircle2 className="h-5 w-5 text-green-600" /> : <AlertCircle className="h-5 w-5 text-red-600" />}
+                  <AlertTitle className={`${message.type === 'success' ? 'text-green-800' : 'text-red-800'} text-lg`}>
+                    {message.type === 'success' ? "Success!" : "Error!"}
+                  </AlertTitle>
+                  <AlertDescription className={`${message.type === 'success' ? 'text-green-700' : 'text-red-700'}`}>
+                    {message.text}
+                  </AlertDescription>
+                </Alert>
+              )}
+              {formSubmitted && message?.type === 'success' ? ( 
                 <Alert className="bg-green-50 border-green-200 mb-6">
                   <CheckCircle2 className="h-5 w-5 text-green-600" />
                   <AlertTitle className="text-green-800 text-lg">
@@ -112,7 +176,7 @@ const Contact = () => {
 
                   <div className="space-y-2 mb-6">
                     <Label htmlFor="subject">Subject</Label>
-                    <Select onValueChange={handleSelectChange}>
+                    <Select onValueChange={handleSelectChange} value={formData.subject}>
                       <SelectTrigger>
                         <SelectValue placeholder="Select a topic" />
                       </SelectTrigger>
@@ -147,14 +211,13 @@ const Contact = () => {
                   <Button
                     type="submit"
                     className="w-full bg-red-600 hover:bg-red-700"
-                  >
-                    Send Message
+                    disabled={loading || !isDbReady}   >
+                    {loading ? "Sending Message..." : "Send Message"}
                   </Button>
                 </form>
               )}
             </div>
 
-            {/* Contact Information */}
             <div className="space-y-6">
               <div className="bg-white p-6 rounded-lg shadow-sm">
                 <h3 className="text-lg font-semibold mb-4">

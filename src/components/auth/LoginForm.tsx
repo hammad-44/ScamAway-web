@@ -52,7 +52,7 @@ export function LoginForm() {
 
     try {
       await signInWithEmailAndPassword(auth, data.email, data.password);
-      navigate("/account"); // Replace with your protected route
+      navigate("/account");
     } catch (err: any) {
       setError(err.message || "Login failed");
     } finally {
@@ -141,30 +141,7 @@ export function LoginForm() {
               )}
             />
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="remember-me"
-                  checked={form.watch("rememberMe")}
-                  onCheckedChange={(checked) =>
-                    form.setValue("rememberMe", checked as boolean)
-                  }
-                />
-                <label
-                  htmlFor="remember-me"
-                  className="text-sm font-medium leading-none"
-                >
-                  Remember me
-                </label>
-              </div>
-
-              <Link
-                to="/forgot-password"
-                className="text-sm font-medium text-red-600 hover:text-red-800"
-              >
-                Forgot password?
-              </Link>
-            </div>
+           
 
             <Button
               type="submit"

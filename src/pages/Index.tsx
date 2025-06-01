@@ -24,10 +24,8 @@ import { TrustPartners } from "@/components/sections/TrustPartners";
 const Index = () => {
   const handleScamCheck = (value: string, type: string) => {
     console.log(`Checking ${type}: ${value}`);
-    // In a real implementation, this would call an API or redirect to results
   };
 
-  // Statistics for the dashboard
   const statistics = [
     {
       title: "Websites Scanned",

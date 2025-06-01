@@ -4,8 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {AlertDialog} from '@/components/ui/AlertDialog';
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
 type CheckType = "website";
+type AnalysisType = "basic" | "detailed";
 
 interface ScamCheckerInputProps {
   onCheck?: (value: string, type: CheckType, result?: any) => void;
@@ -19,36 +23,56 @@ export function ScamCheckerInput({
   const [inputValue, setInputValue] = useState("");
   const [activeType, setActiveType] = useState<CheckType>("website");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate(); // ⬅️ for navigation
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [selectedAnalysisType, setSelectedAnalysisType] = useState<AnalysisType>("basic");
+  const navigate = useNavigate();
 
-  const handleCheck = async () => {
-    if (!inputValue.trim()) return;
 
-    setLoading(true);
-
+  const isValidUrl = (url: string) => {
     try {
-      const response = await fetch("http://localhost:8000/predict", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ url: inputValue }),
-      });
-
-      const result = await response.json();
-      console.log("🔍 Scam Check Result:", result);
-
-      if (onCheck) {
-        onCheck(inputValue, activeType, result);
+      new URL(url);
+      return true;
+    } catch (e) {
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        try {
+          new URL(`https://${url}`);
+          return true;
+        } catch (e) {
+          return false;
+        }
       }
+      return false;
+    }
+  };
 
-      // Redirect to /results?url=inputValue
-      navigate(`/results?url=${encodeURIComponent(inputValue)}`);
-    } catch (error) {
-      console.error("❌ Error checking scam:", error);
-      alert("Failed to check scam status. Try again.");
-    } finally {
-      setLoading(false);
+  const handleCheck = () => {
+    if (!inputValue.trim()) {
+      setErrorMessage("Please enter a URL to check.");
+      setShowErrorModal(true);
+      return;
+    }
+
+    if (!isValidUrl(inputValue)) {
+      setErrorMessage("Please enter a valid URL (e.g., example.com, https://example.com).");
+      setShowErrorModal(true);
+      return;
+    }
+
+    let analysisMessage = "";
+    if (selectedAnalysisType === "basic") {
+      analysisMessage = "Basic analysis will take approximately 2 minutes.";
+    } else { 
+      analysisMessage = "Detailed analysis will take time based on the size and number of pages on the website.";
+    }
+
+    setErrorMessage(analysisMessage);
+    setShowErrorModal(true);
+
+    navigate(`/results?url=${encodeURIComponent(inputValue)}&analysisType=${selectedAnalysisType}`);
+
+    if (onCheck) {
+      onCheck(inputValue, activeType);
     }
   };
 
@@ -56,6 +80,11 @@ export function ScamCheckerInput({
     if (e.key === "Enter") {
       handleCheck();
     }
+  };
+
+  const closeErrorModal = () => {
+    setShowErrorModal(false);
+    setErrorMessage("");
   };
 
   return (
@@ -73,6 +102,29 @@ export function ScamCheckerInput({
         />
       </div>
 
+      <div className="mt-4">
+        <RadioGroup
+          defaultValue="basic"
+          onValueChange={(value: AnalysisType) => setSelectedAnalysisType(value)}
+          className="flex space-x-4"
+        >
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="basic" id="basic-analysis" />
+            <Label htmlFor="basic-analysis">Basic Analysis</Label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="detailed" id="detailed-analysis" />
+            <Label htmlFor="detailed-analysis">Detailed Analysis</Label>
+          </div>
+        </RadioGroup>
+        {/* Dynamic text based on selected analysis type */}
+        <p className="text-gray-500 text-sm mt-2">
+          {selectedAnalysisType === "basic"
+            ? "Performs a quick check focusing on core domain information and homepage content."
+            : "Conducts a comprehensive analysis, crawling relevant pages for in-depth insights."}
+        </p>
+      </div>
+
       <div className="mt-6 mx-auto">
         <Button
           onClick={handleCheck}
@@ -83,6 +135,13 @@ export function ScamCheckerInput({
           {loading ? "Checking..." : "Check scam"}
         </Button>
       </div>
+
+      <AlertDialog
+        isOpen={showErrorModal}
+        onClose={closeErrorModal}
+        title={selectedAnalysisType === "basic" ? "Basic Analysis Information" : "Detailed Analysis Information"}
+        message={errorMessage}
+      />
     </div>
   );
 }

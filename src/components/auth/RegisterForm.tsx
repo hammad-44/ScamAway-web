@@ -20,8 +20,7 @@ import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { auth, provider } from "@/firebase";
 import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import { db } from "@/firebase"; // import your Firestore db
-
+import { db } from "@/firebase";
 const formSchema = z
   .object({
     firstName: z.string().min(1, "First name is required"),
@@ -79,7 +78,6 @@ export function RegisterForm() {
     );
     const user = userCredential.user;
 
-    // Save additional user data to Firestore
     await setDoc(doc(db, "users", user.uid), {
       uid: user.uid,
       email: user.email,

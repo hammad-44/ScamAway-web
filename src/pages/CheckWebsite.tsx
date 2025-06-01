@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -14,17 +14,50 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
-
-// Mock data for recent checks
-const recentChecks = [
-  { url: "amazon.com", status: "safe", date: "2023-10-15" },
-  { url: "scamwebsite123.net", status: "scam", date: "2023-10-14" },
-  { url: "unknownshop.co", status: "questionable", date: "2023-10-12" },
-  { url: "ebay.com", status: "safe", date: "2023-10-10" },
-  { url: "fakephishingsite.org", status: "scam", date: "2023-10-08" },
-];
+import { getFirestore, collection, query, orderBy, limit, getDocs } from "firebase/firestore";
+import { db } from "@/firebase";
+import { Link } from "react-router-dom";
 
 const CheckWebsite = () => {
+  const [recentChecks, setRecentChecks] = useState<any[]>([]);
+  const [loadingRecent, setLoadingRecent] = useState(true);
+  useEffect(() => {
+    const fetchRecentChecks = async () => {
+      try {
+        const reportsRef = collection(db, "reports");
+        const q = query(
+          reportsRef,
+          orderBy("timestamp", "desc"),
+          limit(5)
+        );
+
+        const querySnapshot = await getDocs(q);
+        const checks = querySnapshot.docs.map(doc => {
+          const data = doc.data();
+          console.log(data);
+          return {
+            id: doc.id,
+            status: calculateStatus(data.riskScore),
+            date: data.timestamp.toDate()
+          };
+        });
+        console.log(checks);
+        setRecentChecks(checks);
+      } catch (error) {
+        console.error("Error fetching recent checks:", error);
+      } finally {
+        setLoadingRecent(false);
+      }
+    };
+
+    fetchRecentChecks();
+  }, []);
+
+  const calculateStatus = (riskScore: number) => {
+    if (riskScore <= 30) return "safe";
+    if (riskScore <= 70) return "questionable";
+    return "scam";
+  };
   const [searchResult, setSearchResult] = useState<null | {
     url: string;
     status: "safe" | "scam" | "questionable";
@@ -44,61 +77,7 @@ const CheckWebsite = () => {
     if (!value) return;
 
     setIsSearching(true);
-
-    // Simulate API call
-    setTimeout(() => {
-      // Mock response
-      if (
-        value.includes("scam") ||
-        value.includes("fake") ||
-        value.includes("phishing")
-      ) {
-        setSearchResult({
-          url: value,
-          status: "scam",
-          score: 15,
-          details: {
-            domainAge: "7 days",
-            country: "Unknown",
-            secureConnection: false,
-            blacklisted: true,
-            reportedCount: 27,
-          },
-        });
-      } else if (
-        value.includes("unknown") ||
-        value.includes("new") ||
-        value.includes("check")
-      ) {
-        setSearchResult({
-          url: value,
-          status: "questionable",
-          score: 62,
-          details: {
-            domainAge: "3 months",
-            country: "Panama",
-            secureConnection: true,
-            blacklisted: false,
-            reportedCount: 3,
-          },
-        });
-      } else {
-        setSearchResult({
-          url: value,
-          status: "safe",
-          score: 89,
-          details: {
-            domainAge: "7 years",
-            country: "United States",
-            secureConnection: true,
-            blacklisted: false,
-            reportedCount: 0,
-          },
-        });
-      }
-      setIsSearching(false);
-    }, 2000);
-  };
+  }
 
   const getStatusInfo = (status: string) => {
     switch (status) {
@@ -335,67 +314,80 @@ const CheckWebsite = () => {
 
             {/* Sidebar */}
             <div className="space-y-8">
-              <Card>
-                <CardContent className="p-6">
-                  <h3 className="text-lg font-semibold mb-4">Recent Checks</h3>
-                  <div className="space-y-4">
-                    {recentChecks.map((check, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center justify-between border-b last:border-0 pb-2 last:pb-0"
-                      >
-                        <div className="flex items-center gap-2">
-                          {check.status === "safe" ? (
-                            <CheckCircle className="h-4 w-4 text-green-500" />
-                          ) : check.status === "scam" ? (
-                            <AlertTriangle className="h-4 w-4 text-red-500" />
-                          ) : (
-                            <AlertCircle className="h-4 w-4 text-yellow-500" />
-                          )}
-                          <span className="font-medium">{check.url}</span>
+                <Card>
+                  <CardContent className="p-6">
+                    <h3 className="text-lg font-semibold mb-4">Recent Checks</h3>
+                    <div className="space-y-4">
+                      {loadingRecent ? (
+                        <div className="text-center py-4">
+                          <Clock className="h-6 w-6 text-blue-500 mx-auto animate-pulse" />
+                          <p className="text-gray-600 mt-2">Loading recent checks...</p>
                         </div>
-                        <span className="text-sm text-gray-500">
-                          {new Date(check.date).toLocaleDateString(undefined, {
-                            month: "short",
-                            day: "numeric",
-                          })}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+                      ) : recentChecks.length > 0 ? (
+                        recentChecks.map((check) => (
+                          <Link
+                            to={`/results?url=${encodeURIComponent(check.id)}`}
+                            key={check.id}
+                            className="block hover:bg-gray-50 rounded -mx-2 px-2 py-1 transition-colors"
+                          >
+                            <div className="flex items-center justify-between border-b last:border-0 pb-2 last:pb-0">
+                              <div className="flex items-center gap-2">
+                                {check.status === "safe" ? (
+                                  <CheckCircle className="h-4 w-4 text-green-500" />
+                                ) : check.status === "scam" ? (
+                                  <AlertTriangle className="h-4 w-4 text-red-500" />
+                                ) : (
+                                  <AlertCircle className="h-4 w-4 text-yellow-500" />
+                                )}
+                                <span className="font-medium">{check.id}</span>
+                              </div>
+                              <span className="text-sm text-gray-500">
+                                {check.date.toLocaleDateString(undefined, {
+                                  month: "short",
+                                  day: "numeric",
+                                })}
+                              </span>
+                            </div>
+                          </Link>
+                        ))
+                      ) : (
+                        <p className="text-gray-500 py-2 text-center">No recent checks found</p>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
 
-              <Card>
-                <CardContent className="p-6">
-                  <h3 className="text-lg font-semibold mb-4">
-                    Why Check Websites?
-                  </h3>
-                  <ul className="space-y-3 text-gray-700">
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
-                      <span>Avoid falling victim to phishing attempts</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
-                      <span>
-                        Protect your personal and financial information
-                      </span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
-                      <span>Shop with confidence on legitimate websites</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
-                      <span>Help others by reporting scams you encounter</span>
-                    </li>
-                  </ul>
-                </CardContent>
-              </Card>
+
+                <Card>
+                  <CardContent className="p-6">
+                    <h3 className="text-lg font-semibold mb-4">
+                      Why Check Websites?
+                    </h3>
+                    <ul className="space-y-3 text-gray-700">
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
+                        <span>Avoid falling victim to phishing attempts</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
+                        <span>
+                          Protect your personal and financial information
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
+                        <span>Shop with confidence on legitimate websites</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
+                        <span>Help others by reporting scams you encounter</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           </div>
-        </div>
       </main>
 
       <Footer />

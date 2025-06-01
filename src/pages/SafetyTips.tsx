@@ -399,45 +399,345 @@ const SafetyTips = () => {
               </Card>
             </TabsContent>
 
-            {/* Other tabs would be implemented similarly */}
+            {/* Payment Safety Tab */}
             <TabsContent value="payment">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-2xl">Payment Safety</CardTitle>
+                  <CardTitle className="text-2xl">
+                    Secure Payment Practices
+                  </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <p className="text-gray-700 mb-6">
+                <CardContent className="space-y-6">
+                  <p className="text-gray-700">
                     Protecting your financial information online is crucial.
                     This section provides guidance on secure payment methods and
                     practices to prevent financial fraud.
                   </p>
-                  <p className="italic text-gray-500">
-                    Detailed payment safety content would be provided here,
-                    similar to the Shopping and Email sections.
-                  </p>
+
+                  <div className="grid md:grid-cols-2 gap-8">
+                    <div className="space-y-4">
+                      <h3 className="text-xl font-semibold flex items-center gap-2">
+                        <Shield className="h-5 w-5 text-green-600" />
+                        Safe Payment Methods
+                      </h3>
+
+                      <div className="space-y-3">
+                        <div className="flex items-start gap-3">
+                          <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
+                          <div>
+                            <p className="font-medium">
+                              Use Credit Cards or PayPal
+                            </p>
+                            <p className="text-gray-600">
+                              These offer built-in fraud protection and dispute
+                              resolution services.
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-start gap-3">
+                          <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
+                          <div>
+                            <p className="font-medium">Virtual Credit Cards</p>
+                            <p className="text-gray-600">
+                              Some banks offer temporary card numbers for
+                              one-time online purchases, adding an extra layer
+                              of security.
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-start gap-3">
+                          <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
+                          <div>
+                            <p className="font-medium">Avoid Wire Transfers</p>
+                            <p className="text-gray-600">
+                              Wire transfers are like sending cash; once sent,
+                              it's almost impossible to recover.
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-start gap-3">
+                          <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
+                          <div>
+                            <p className="font-medium">
+                              Two-Factor Authentication (2FA)
+                            </p>
+                            <p className="text-gray-600">
+                              Enable 2FA wherever possible for payment accounts
+                              to add an extra layer of security.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <h3 className="text-xl font-semibold flex items-center gap-2">
+                        <Shield className="h-5 w-5 text-green-600" />
+                        General Payment Security
+                      </h3>
+
+                      <div className="space-y-3">
+                        <div className="flex items-start gap-3">
+                          <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
+                          <div>
+                            <p className="font-medium">
+                              Use Strong, Unique Passwords
+                            </p>
+                            <p className="text-gray-600">
+                              Especially for banking and payment accounts.
+                              Consider using a password manager.
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-start gap-3">
+                          <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
+                          <div>
+                            <p className="font-medium">
+                              Regularly Monitor Bank Statements
+                            </p>
+                            <p className="text-gray-600">
+                              Check for any suspicious or unauthorized
+                              transactions promptly.
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-start gap-3">
+                          <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
+                          <div>
+                            <p className="font-medium">
+                              Be Cautious with Public Wi-Fi
+                            </p>
+                            <p className="text-gray-600">
+                              Avoid making payments or accessing sensitive
+                              financial information on unsecured public Wi-Fi networks.
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-start gap-3">
+                          <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
+                          <div>
+                            <p className="font-medium">
+                              Keep Software Updated
+                            </p>
+                            <p className="text-gray-600">
+                              Ensure your operating system, browser, and antivirus
+                              software are always up-to-date to protect against vulnerabilities.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-red-50 p-6 rounded-lg border border-red-100 mt-6">
+                    <h3 className="text-xl font-semibold flex items-center gap-2 mb-3">
+                      <AlertTriangle className="h-5 w-5 text-red-600" />
+                      Red Flags in Payment Scams
+                    </h3>
+
+                    <ul className="grid md:grid-cols-2 gap-x-8 gap-y-2">
+                      <li className="flex items-start gap-2">
+                        <span className="text-red-600 font-bold">•</span>
+                        Requests for payment via gift cards or unusual methods
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-red-600 font-bold">•</span>
+                        Pressure to pay immediately or face consequences
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-red-600 font-bold">•</span>
+                        Unsolicited invoices or payment requests
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-red-600 font-bold">•</span>
+                        Offers that seem too good to be true, requiring upfront payment
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-red-600 font-bold">•</span>
+                        Links to suspicious payment portals
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-red-600 font-bold">•</span>
+                        Requests for personal financial details via unsecured channels
+                      </li>
+                    </ul>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
 
+            {/* Mobile Safety Tab */}
             <TabsContent value="mobile">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-2xl">Mobile Safety</CardTitle>
+                  <CardTitle className="text-2xl">Mobile Device Safety</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <p className="text-gray-700 mb-6">
-                    As smartphones become our primary devices, they also become
-                    targets for scammers. Learn how to keep your mobile devices
-                    and data secure.
+                <CardContent className="space-y-6">
+                  <p className="text-gray-700">
+                    Smartphones are central to our digital lives, making them prime targets for scams.
+                    Protect your mobile devices and personal data with these essential tips.
                   </p>
-                  <p className="italic text-gray-500">
-                    Detailed mobile safety content would be provided here,
-                    similar to the Shopping and Email sections.
-                  </p>
+
+                  <div className="grid md:grid-cols-2 gap-8">
+                    <div className="space-y-4">
+                      <h3 className="text-xl font-semibold flex items-center gap-2">
+                        <Shield className="h-5 w-5 text-green-600" />
+                        Securing Your Device
+                      </h3>
+
+                      <div className="space-y-3">
+                        <div className="flex items-start gap-3">
+                          <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
+                          <div>
+                            <p className="font-medium">
+                              Use Strong Passcodes/Biometrics
+                            </p>
+                            <p className="text-gray-600">
+                              Enable fingerprint, face ID, or a strong PIN/password to unlock your device.
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-start gap-3">
+                          <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
+                          <div>
+                            <p className="font-medium">
+                              Keep Your OS Updated
+                            </p>
+                            <p className="text-gray-600">
+                              Install operating system updates promptly to patch security vulnerabilities.
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-start gap-3">
+                          <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
+                          <div>
+                            <p className="font-medium">
+                              Review App Permissions
+                            </p>
+                            <p className="text-gray-600">
+                              Only grant necessary permissions to apps. Be wary of apps requesting excessive access.
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-start gap-3">
+                          <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
+                          <div>
+                            <p className="font-medium">
+                              Enable Find My Device Features
+                            </p>
+                            <p className="text-gray-600">
+                              These features (e.g., Find My iPhone, Find My Device for Android) can help locate a lost or stolen phone.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <h3 className="text-xl font-semibold flex items-center gap-2">
+                        <Shield className="h-5 w-5 text-green-600" />
+                        Protecting Your Data
+                      </h3>
+
+                      <div className="space-y-3">
+                        <div className="flex items-start gap-3">
+                          <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
+                          <div>
+                            <p className="font-medium">
+                              Be Wary of Public Wi-Fi
+                            </p>
+                            <p className="text-gray-600">
+                              Avoid accessing sensitive information or making payments on unsecured public Wi-Fi.
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-start gap-3">
+                          <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
+                          <div>
+                            <p className="font-medium">
+                              Avoid Clicking Suspicious Links
+                            </p>
+                            <p className="text-gray-600">
+                              Be cautious of links in SMS messages (smishing) or unexpected emails.
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-start gap-3">
+                          <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
+                          <div>
+                            <p className="font-medium">
+                              Only Download Apps from Official Stores
+                            </p>
+                            <p className="text-gray-600">
+                              Google Play Store and Apple App Store vet apps for security.
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-start gap-3">
+                          <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
+                          <div>
+                            <p className="font-medium">
+                              Regularly Back Up Your Data
+                            </p>
+                            <p className="text-gray-600">
+                              Back up photos, contacts, and important documents to cloud services or a computer.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-red-50 p-6 rounded-lg border border-red-100 mt-6">
+                    <h3 className="text-xl font-semibold flex items-center gap-2 mb-3">
+                      <AlertTriangle className="h-5 w-5 text-red-600" />
+                      Mobile Scam Warning Signs
+                    </h3>
+
+                    <ul className="grid md:grid-cols-2 gap-x-8 gap-y-2">
+                      <li className="flex items-start gap-2">
+                        <span className="text-red-600 font-bold">•</span>
+                        Unexpected calls or SMS messages from unknown numbers
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-red-600 font-bold">•</span>
+                        Messages asking for personal details or login credentials
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-red-600 font-bold">•</span>
+                        Links to suspicious websites in texts or emails
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-red-600 font-bold">•</span>
+                        Pop-ups claiming your device is infected with a virus
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-red-600 font-bold">•</span>
+                        Apps requesting excessive or unusual permissions
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-red-600 font-bold">•</span>
+                        Unsolicited requests to download software or updates
+                      </li>
+                    </ul>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
 
+            {/* Cryptocurrency Safety Tab */}
             <TabsContent value="crypto">
               <Card>
                 <CardHeader>
@@ -445,21 +745,174 @@ const SafetyTips = () => {
                     Cryptocurrency Safety
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <p className="text-gray-700 mb-6">
-                    Cryptocurrency scams are increasingly common. Learn how to
-                    identify legitimate opportunities and protect your digital
-                    assets.
+                <CardContent className="space-y-6">
+                  <p className="text-gray-700">
+                    The world of cryptocurrency is exciting but also a hotbed for scams.
+                    Learn how to identify legitimate opportunities and protect your digital assets.
                   </p>
-                  <p className="italic text-gray-500">
-                    Detailed cryptocurrency safety content would be provided
-                    here, similar to the Shopping and Email sections.
-                  </p>
+
+                  <div className="grid md:grid-cols-2 gap-8">
+                    <div className="space-y-4">
+                      <h3 className="text-xl font-semibold flex items-center gap-2">
+                        <Shield className="h-5 w-5 text-green-600" />
+                        Protecting Your Assets
+                      </h3>
+
+                      <div className="space-y-3">
+                        <div className="flex items-start gap-3">
+                          <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
+                          <div>
+                            <p className="font-medium">
+                              Use Reputable Exchanges
+                            </p>
+                            <p className="text-gray-600">
+                              Only use well-known and regulated cryptocurrency
+                              exchanges with strong security measures.
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-start gap-3">
+                          <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
+                          <div>
+                            <p className="font-medium">
+                              Secure Your Wallet
+                            </p>
+                            <p className="text-gray-600">
+                              Use hardware wallets for large holdings and enable
+                              all available security features like 2FA.
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-start gap-3">
+                          <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
+                          <div>
+                            <p className="font-medium">
+                              Beware of Phishing Websites
+                            </p>
+                            <p className="text-gray-600">
+                              Always double-check the URL of crypto exchanges
+                              and wallets before entering credentials.
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-start gap-3">
+                          <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
+                          <div>
+                            <p className="font-medium">
+                              Educate Yourself
+                            </p>
+                            <p className="text-gray-600">
+                              Understand the basics of blockchain and
+                              cryptocurrency before investing.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <h3 className="text-xl font-semibold flex items-center gap-2">
+                        <Shield className="h-5 w-5 text-green-600" />
+                        Identifying Crypto Scams
+                      </h3>
+
+                      <div className="space-y-3">
+                        <div className="flex items-start gap-3">
+                          <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
+                          <div>
+                            <p className="font-medium">
+                              "Get Rich Quick" Schemes
+                            </p>
+                            <p className="text-gray-600">
+                              Promises of guaranteed high returns with little to
+                              no risk are almost always scams.
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-start gap-3">
+                          <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
+                          <div>
+                            <p className="font-medium">
+                              Fake ICOs/Tokens
+                            </p>
+                            <p className="text-gray-600">
+                              Thoroughly research any new Initial Coin Offering
+                              (ICO) or token before investing.
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-start gap-3">
+                          <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
+                          <div>
+                            <p className="font-medium">
+                              Romance Scams with Crypto
+                            </p>
+                            <p className="text-gray-600">
+                              Scammers build relationships online then
+                              convince victims to invest in fake crypto schemes.
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-start gap-3">
+                          <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
+                          <div>
+                            <p className="font-medium">
+                              Impersonation Scams
+                            </p>
+                            <p className="text-gray-600">
+                              Scammers pretend to be celebrities, government
+                              officials, or support staff to trick you into
+                              sending crypto.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-red-50 p-6 rounded-lg border border-red-100 mt-6">
+                    <h3 className="text-xl font-semibold flex items-center gap-2 mb-3">
+                      <AlertTriangle className="h-5 w-5 text-red-600" />
+                      Common Crypto Scam Tactics
+                    </h3>
+
+                    <ul className="grid md:grid-cols-2 gap-x-8 gap-y-2">
+                      <li className="flex items-start gap-2">
+                        <span className="text-red-600 font-bold">•</span>
+                        Unsolicited investment opportunities via social media
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-red-600 font-bold">•</span>
+                        Requests for private keys or seed phrases
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-red-600 font-bold">•</span>
+                        Fake customer support asking for remote access
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-red-600 font-bold">•</span>
+                        Promises of free crypto or airdrops requiring a small "fee"
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-red-600 font-bold">•</span>
+                        Pressure to invest quickly without proper research
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-red-600 font-bold">•</span>
+                        Websites with poor design, grammar, or missing contact info
+                      </li>
+                    </ul>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
           </Tabs>
-
         </div>
       </main>
 

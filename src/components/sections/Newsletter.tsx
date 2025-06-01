@@ -20,13 +20,11 @@ export function Newsletter() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Simple email validation
     if (!email.includes("@") || !email.includes(".")) {
       setError("Please enter a valid email address");
       return;
     }
 
-    // In a real implementation, this would send the email to an API
     setSubscribed(true);
     setError(null);
     setEmail("");

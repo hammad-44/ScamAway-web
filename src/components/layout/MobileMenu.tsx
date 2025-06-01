@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, User } from "lucide-react";
-import { auth } from "@/firebase"; // Adjust path if needed
+import { auth } from "@/firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 
 export function MobileMenu() {

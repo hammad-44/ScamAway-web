@@ -68,7 +68,6 @@ export function AccountTabs() {
             email: currentUser.email,
           });
         } else {
-          // No profile in Firestore yet
           setPersonalInfo({
             firstName: "",
             lastName: "",
@@ -113,7 +112,6 @@ const handleLogout = async () => {
         <TabsTrigger value="activity">Activity</TabsTrigger>
       </TabsList>
 
-      {/* Profile Tab */}
       <TabsContent value="profile">
         <Card>
           <CardHeader>
@@ -159,7 +157,6 @@ const handleLogout = async () => {
         </Card>
       </TabsContent>
 
-      {/* Activity Tab */}
       <TabsContent value="activity">
         <Card>
           <CardHeader>
